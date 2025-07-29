@@ -43,6 +43,7 @@ import androidx.media3.ui.PlayerView
 import androidx.navigation.NavController
 import com.example.artiumlessons.data.model.Lesson
 import com.example.artiumlessons.ui.core_components.NavBar
+import com.example.artiumlessons.ui.core_components.VideoPlayer
 
 @Composable
 fun LessonDetailRoute(lesson: Lesson?, navController: NavController) {
@@ -60,23 +61,6 @@ private fun LessonDetailScreen(
     modifier: Modifier = Modifier,
     onBackPressed: () -> Unit = {}
 ) {
-
-    val context = LocalContext.current
-    val exoPlayer = remember {
-        ExoPlayer.Builder(context).build().apply {
-            lesson.videoUrl?.let { url ->
-                val mediaItem = MediaItem.fromUri(Uri.parse(url))
-                setMediaItem(mediaItem)
-                prepare()
-            }
-        }
-    }
-
-    DisposableEffect(Unit) {
-        onDispose {
-            exoPlayer.release()
-        }
-    }
 
     var notesExpanded by remember { mutableStateOf(false) }
     var showBottomSheet by remember { mutableStateOf(false) }
@@ -104,12 +88,8 @@ private fun LessonDetailScreen(
             }
 
             item {
-                AndroidView(
-                    factory = { ctx ->
-                        PlayerView(ctx).apply {
-                            player = exoPlayer
-                        }
-                    },
+                VideoPlayer(
+                    videoUrl = lesson.videoUrl ?: "",
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(250.dp)

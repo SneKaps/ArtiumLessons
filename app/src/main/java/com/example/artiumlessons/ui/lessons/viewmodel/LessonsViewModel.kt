@@ -2,7 +2,9 @@ package com.example.artiumlessons.ui.lessons.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.artiumlessons.data.model.Lesson
 import com.example.artiumlessons.data.repository.LessonsRepository
+import com.example.artiumlessons.serialize
 import com.example.artiumlessons.ui.lessons.LessonsListScreenEvents
 import com.example.artiumlessons.ui.lessons.LessonsListScreenStates
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -30,12 +32,16 @@ class LessonsViewModel @Inject constructor(
         loadLessons()
     }
 
+    fun navigateToLessonDetail(lesson: Lesson) {
+        _events.trySend(LessonsListScreenEvents.NavigateTo("lesson_detail/${lesson.serialize()}"))
+    }
+
     private fun loadLessons() {
         viewModelScope.launch {
             repository.getLessons().onSuccess {
                 _screenState.value = LessonsListScreenStates.Success(it)
             }.onFailure {
-                _events.send(LessonsListScreenEvents.Error(it.message ?: "Something went wrong"))
+                _events.trySend(LessonsListScreenEvents.Error(it.message ?: "Something went wrong"))
             }
         }
     }

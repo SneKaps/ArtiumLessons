@@ -22,7 +22,6 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.artiumlessons.data.model.Lesson
-import com.example.artiumlessons.serialize
 import com.example.artiumlessons.ui.core_components.NavBar
 import com.example.artiumlessons.ui.lessons.viewmodel.LessonsViewModel
 import com.example.artiumlessons.ui.showToast
@@ -52,7 +51,7 @@ fun LessonsListScreen(navController: NavController) {
             is LessonsListScreenStates.Success -> LessonListScreen(
                 lessons = currentState.lessons,
                 onClickItem = { lesson ->
-                    navController.navigate("lesson_detail/${lesson.serialize()}")
+                    viewModel.navigateToLessonDetail(lesson)
                 },
                 modifier = Modifier.padding(horizontal = 16.dp),
             )
