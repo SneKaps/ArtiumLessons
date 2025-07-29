@@ -11,6 +11,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.consumeAsFlow
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -23,7 +24,7 @@ class LessonsViewModel @Inject constructor(
         MutableStateFlow<LessonsListScreenStates>(LessonsListScreenStates.Loading)
     val screenState: StateFlow<LessonsListScreenStates> = _screenState.asStateFlow()
     private val _events = Channel<LessonsListScreenEvents?>()
-    val screenEvents = _events.consumeAsFlow()
+    val screenEvents = _events.receiveAsFlow()
 
     init {
         loadLessons()
